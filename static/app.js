@@ -91,7 +91,7 @@ function renderGraph(cy, data, layoutName = "concentric") {
     cy.fit();
 }
 
-fetch("/api/overview")
+fetch("https://bgpscanvisualizer.onrender.com/api/overview")
     .then(r => r.json())
     .then(data => renderGraph(cy, data))
     .catch(err => console.error(err));
@@ -103,7 +103,7 @@ document
         const query =
             document.getElementById("cypher-query").value;
 
-        fetch("/api/visualize", {
+        fetch("https://bgpscanvisualizer.onrender.com/api/visualize", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
