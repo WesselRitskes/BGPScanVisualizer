@@ -3,6 +3,9 @@ const local = false;
 let ip = "";
 if (!local)
     ip = "https://bgpscanvisualizer.onrender.com";
+let login_page = "/login.html"
+if (!local)
+    login_page = "BGPScanVisualizer/login.html"
 
 let currentGraphRequest = 0;
 
@@ -181,7 +184,7 @@ fetch(`${ip}/api/overview`, {
 })
     .then(response => {
         if (response.status === 401) {
-            window.location = "/login.html";
+            window.location = login_page;
             throw new Error("Unauthorized");
         }
 
@@ -230,7 +233,7 @@ document
         )
     .then(response => {
         if (response.status === 401) {
-            window.location = "/login.html";
+            window.location = login_page;
             throw new Error("Unauthorized");
         }
 
@@ -379,7 +382,7 @@ cy.on("tap", "node", async evt => {
         );
 
         if (response.status === 401) {
-            window.location = "/login.html";
+            window.location = login_page;
             return
         }
 
@@ -447,5 +450,5 @@ document
             credentials: "include"
         });
 
-        window.location = "/login.html";
+        window.location = login_page;
     });

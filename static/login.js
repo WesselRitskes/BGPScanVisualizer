@@ -3,6 +3,9 @@ const local = false
 let ip = "";
 if (!local)
     ip = "https://bgpscanvisualizer.onrender.com";
+let index_page = "/index.html"
+if (!local)
+    index_page = "BGPScanVisualizer/index.html"
 
 document
     .getElementById("login-button")
@@ -27,7 +30,7 @@ document
         });
 
         if (response.ok) {
-            window.location = "/index.html";
+            window.location = index_page;
         } else {
             document.getElementById("login-error").textContent =
                 "Invalid username or password";
