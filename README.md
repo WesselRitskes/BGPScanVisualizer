@@ -131,4 +131,4 @@ Additional information, example queries, and usage instructions are available di
 
 ## AI Usage
 
-Generative AI tools (ChatGPT by OpenAI) were used during the development of this project as a programming assistant. The tools were primarily used to assist with front-end implementation data. All generated suggestions were reviewed, adapted where necessary, and validated by the author before being incorporated into the project.
+Generative AI tools (ChatGPT by OpenAI) were used during the development of this project as a programming assistant. The tools were primarily used to assist with the implementation of the front-end. All generated suggestions were reviewed, adapted where necessary, and validated by the author before being incorporated into the project.
