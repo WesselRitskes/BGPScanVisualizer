@@ -3,9 +3,9 @@ const local = false
 let ip = "";
 if (!local)
     ip = "https://bgpscanvisualizer.onrender.com";
-let index_page = "/index.html"
+let index_page = "/"
 if (!local)
-    index_page = "/BGPScanVisualizer/index.html"
+    index_page = "/BGPScanVisualizer/"
 
 document
     .getElementById("login-button")
