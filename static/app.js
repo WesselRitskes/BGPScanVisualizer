@@ -5,7 +5,7 @@ if (!local)
     ip = "https://bgpscanvisualizer.onrender.com";
 let login_page = "/login.html"
 if (!local)
-    login_page = "BGPScanVisualizer/login.html"
+    login_page = "/BGPScanVisualizer/login.html"
 
 let currentGraphRequest = 0;
 

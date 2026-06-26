@@ -5,7 +5,7 @@ if (!local)
     ip = "https://bgpscanvisualizer.onrender.com";
 let index_page = "/index.html"
 if (!local)
-    index_page = "BGPScanVisualizer/index.html"
+    index_page = "/BGPScanVisualizer/index.html"
 
 document
     .getElementById("login-button")
