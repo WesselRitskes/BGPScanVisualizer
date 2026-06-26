@@ -95,7 +95,7 @@ def gen_username_hash(username):
 
 def gen_session():
     token = secrets.token_urlsafe(32)
-    sessions[token] = time.time() + 60 * 60 * 24
+    sessions[token] = time.time() + 86400
     return token
 
 

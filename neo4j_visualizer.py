@@ -129,7 +129,7 @@ def login(request: LoginRequest, response: Response):
         value=token,
         httponly=True,
         secure=not local,
-        samesite="lax",
+        samesite="none",
         max_age=60 * 60 * 24
     )
 
@@ -144,7 +144,7 @@ def logout(response: Response, session: str | None = Cookie(default=None)):
         key="session",
         httponly=True,
         secure=not local,
-        samesite="lax"
+        samesite="none"
     )
 
     return {"success": True}
