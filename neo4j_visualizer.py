@@ -7,6 +7,9 @@ from auth_manager import *
 import re
 
 local = False
+samesite = "lax"
+if not local:
+    samesite = "none"
 
 class CypherRequest(BaseModel):
     query: str
@@ -129,14 +132,14 @@ def login(request: LoginRequest, response: Response):
         value=token,
         httponly=True,
         secure=not local,
-        samesite="none",
+        samesite=samesite,
         max_age=60 * 60 * 24
     )
 
     return {"success": True}
 
 
-@app.post("auth/logout")
+@app.post("/auth/logout")
 def logout(response: Response, session: str | None = Cookie(default=None)):
     del_session(session)
 
@@ -144,7 +147,7 @@ def logout(response: Response, session: str | None = Cookie(default=None)):
         key="session",
         httponly=True,
         secure=not local,
-        samesite="none"
+        samesite=samesite
     )
 
     return {"success": True}

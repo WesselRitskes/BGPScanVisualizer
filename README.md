@@ -4,7 +4,7 @@
 
 This project is a web-based visualizer for exploring inferred network topology generated from BGP scan data. It was developed as part of a project on **inferring BGP scan data**. More information about that project will be added once it is publicly available.
 
-The application uses a Neo4j database as its backend and provides an interactive graph visualization with support for inspecting neighbouring entities, executing read-only Cypher queries, and browsing the inferred topology.
+The application uses a Neo4j and a PostgreSQL database as its backend and provides an interactive graph visualization with support for inspecting neighbouring entities, executing read-only Cypher queries, and browsing the inferred topology.
 
 A deployed instance of the visualizer is available at:
 
@@ -12,6 +12,7 @@ A deployed instance of the visualizer is available at:
 
 The application is deployed with the following services:
 * **AuraDB**, for hosting the Neo4j database.
+* **Neon**, for hosting the Credentials database.
 * **Render**, for hosting the back-end.
 * **GitHub Pages**, for hosting the front-end.
 
@@ -25,13 +26,14 @@ Access to the application requires valid login credentials. See the **Managing U
 
 The application requires the following environment variables:
 
-| Variable          | Description                                                           |
-| ----------------- | --------------------------------------------------------------------- |
-| `ADMIN_KEY_HASH`  | Argon2 hash of the administrator key used to manage user credentials. |
-| `USERNAME_SECRET` | Secret key used for HMAC hashing usernames before storage.            |
-| `NEO4J_USERNAME`  | Neo4j database username.                                              |
-| `NEO4J_PASSWORD`  | Neo4j database password.                                              |
-| `NEO4J_URI`       | URI of the Neo4j database instance.                                   |
+| Variable          | Description                                                             |
+|-------------------|-------------------------------------------------------------------------|
+| `ADMIN_KEY_HASH`  | Argon2 hash of the administrator key used to manage user credentials.   |
+| `USERNAME_SECRET` | Secret key used for HMAC hashing usernames before storage.              |
+| `NEO4J_USERNAME`  | Neo4j database username.                                                |
+| `NEO4J_PASSWORD`  | Neo4j database password.                                                |
+| `NEO4J_URI`       | URI of the Neo4j database instance.                                     |
+| `DB_URI`          | URI of the PostgreSQL database instance that will hold the credentials. |
 
 ### Generating Authentication Keys
 
@@ -51,7 +53,7 @@ Store the **hash** as `ADMIN_KEY_HASH` in your environment.
 
 Keep the **administrator key** in a secure location, as it is required later for managing user accounts.
 
-The Neo4j environment variables depend on your own Neo4j deployment.
+The Neo4j and PostgreSQL environment variables depend on your own Neo4j deployment.
 
 ---
 

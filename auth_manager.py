@@ -1,18 +1,14 @@
 import secrets
 import string
-import json
 import hashlib
 import hmac
 import time
+import psycopg
 from argon2 import PasswordHasher
-from pathlib import Path
-
 from argon2.exceptions import VerifyMismatchError
 
 ph = PasswordHasher()
-credentials_file = Path("credentials.json")
 sessions = {}
-# Consider storing in a real database
 
 import os
 from dotenv import load_dotenv
@@ -20,6 +16,7 @@ load_dotenv()
 
 admin_hash = os.getenv('ADMIN_KEY_HASH')
 username_secret = os.getenv('USERNAME_SECRET').encode()
+db_uri = os.getenv("DB_URI")
 
 
 def authenticate_session(token):
@@ -37,14 +34,13 @@ def authenticate_session(token):
 
 def authenticate_user(username, password):
     username_hash = gen_username_hash(username)
+    password_hash = _load_credentials(username_hash)
 
-    data = _load_credentials()
-
-    if username_hash not in data.keys():
+    if not password_hash:
         return False
 
     try:
-        if ph.verify(data[username_hash], password):
+        if ph.verify(password_hash, password):
             return True
     except VerifyMismatchError:
         return False
@@ -58,11 +54,7 @@ def gen_credentials(username, admin_key):
     password = gen_password()
     password_hash = ph.hash(password)
 
-    data = _load_credentials()
-
-    data[username_hash] = password_hash
-
-    _save_credentials(data)
+    _save_credentials(username_hash, password_hash)
 
     return password
 
@@ -73,10 +65,7 @@ def del_credentials(username, admin_key):
 
     username_hash = gen_username_hash(username)
 
-    data = _load_credentials()
-    data.pop(username_hash)
-
-    _save_credentials(data)
+    _delete_credentials(username_hash)
 
 
 def gen_password(length=20):
@@ -104,15 +93,31 @@ def del_session(token):
         sessions.pop(token, None)
 
 
-def _load_credentials():
-    if not credentials_file.exists():
-        _save_credentials({})
-        return {}
+def _load_credentials(username_hash):
+    with psycopg.connect(db_uri, connect_timeout=10) as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT password_hash FROM credentials WHERE username_hash = %s;", [username_hash])
+            rows = cur.fetchall()
 
-    with credentials_file.open('r') as f:
-        return json.load(f)
+            if len(rows) >= 1:
+                return rows[0][0]
 
 
-def _save_credentials(data):
-    with credentials_file.open('w') as f:
-        json.dump(data, f, indent=4)
+def _save_credentials(username_hash, password_hash):
+    with psycopg.connect(db_uri, connect_timeout=10) as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO credentials (username_hash, password_hash) 
+                VALUES (%s, %s)
+                ON CONFLICT (username_hash) 
+                DO UPDATE SET password_hash = EXCLUDED.password_hash;
+                """, (username_hash, password_hash))
+
+
+def _delete_credentials(username_hash):
+    with psycopg.connect(db_uri, connect_timeout=10) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM credentials WHERE username_hash = %s;",
+                [username_hash]
+            )
