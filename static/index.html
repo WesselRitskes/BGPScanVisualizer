@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="eng">
 <head>
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <title>BGPScanVisualizer</title>
 </head>
 
 <body>
@@ -18,170 +19,171 @@
 <div id="help-menu">
     <button id="help-button">?</button>
 
-<div id="help-sidebar">
-    <div id="resize-handle"></div>
+    <div id="help-sidebar">
+        <div id="resize-handle"></div>
 
-    <button id="logout">
-        <i class="fa-solid fa-right-from-bracket"></i>
-    </button>
-
-    <h2>Visualization</h2>
-
-    <p>
-        <strong>Click</strong> any node to expand the graph. All nodes directly
-        connected to the selected node are added to the visualization.
-    </p>
-
-    <p>
-        <strong>Hover</strong> over a node (or <strong>press and hold</strong> on
-        mobile) to display its identifier:
-    </p>
-
-    <ul>
-        <li><strong>Public AS</strong>: ASN</li>
-        <li><strong>Private AS</strong>: AS ID</li>
-        <li><strong>Router</strong>: Router ID</li>
-    </ul>
-
-    <p><strong>Node shapes</strong></p>
-
-    <ul>
-        <li>Public AS: Yellow circle</li>
-        <li>Private AS: Blue circle</li>
-        <li>Router: Green square</li>
-    </ul>
-
-    <hr>
-
-    <h2>Cypher (Neo4j)</h2>
-
-    <p>
-        The graph uses the Neo4j Cypher query language.
-    </p>
-
-    <p><strong>Node labels</strong></p>
-
-    <ul>
-        <li><code>Public_AS</code></li>
-        <li><code>Private_AS</code></li>
-        <li><code>Router</code></li>
-    </ul>
-
-    <p><strong>Relationships</strong></p>
-
-    <ul>
-        <li><code>LINK</code> – Router borders a Public AS.</li>
-        <li><code>LOCATED_IN</code> – Router belongs to a Public or Private AS.</li>
-        <li><code>PEERS_WITH</code> – Two Public ASes share a border connection.</li>
-        <li><code>PRIVATE_OF</code> – Private AS belongs to a Public AS.</li>
-    </ul>
-
-    <p><strong>Example queries</strong></p>
-
-    <p>
-        Shows a single Public AS node with ASN 174.
-    </p>
-
-    <div class="query-example">
-        <button class="copy-query">
-            <i class="fa-solid fa-copy"></i>
+        <button id="logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
         </button>
 
-<pre>MATCH (a:Public_AS {asn: 174})
+        <h2>Visualization</h2>
+
+        <p>
+            <strong>Click</strong> any node to expand the graph. All nodes directly
+            connected to the selected node are added to the visualization.
+        </p>
+
+        <p>
+            <strong>Hover</strong> over a node (or <strong>press and hold</strong> on
+            mobile) to display its identifier:
+        </p>
+
+        <ul>
+            <li><strong>Public AS</strong>: ASN</li>
+            <li><strong>Private AS</strong>: AS ID</li>
+            <li><strong>Router</strong>: Router ID</li>
+        </ul>
+
+        <p><strong>Node shapes</strong></p>
+
+        <ul>
+            <li>Public AS: Yellow circle</li>
+            <li>Private AS: Blue circle</li>
+            <li>Router: Green square</li>
+        </ul>
+
+        <hr>
+
+        <h2>Cypher (Neo4j)</h2>
+
+        <p>
+            The graph uses the Neo4j Cypher query language.
+        </p>
+
+        <p><strong>Node labels</strong></p>
+
+        <ul>
+            <li><code>Public_AS</code></li>
+            <li><code>Private_AS</code></li>
+            <li><code>Router</code></li>
+        </ul>
+
+        <p><strong>Relationships</strong></p>
+
+        <ul>
+            <li><code>LINK</code> – Router borders a Public AS.</li>
+            <li><code>LOCATED_IN</code> – Router belongs to a Public or Private AS.</li>
+            <li><code>PEERS_WITH</code> – Two Public ASes share a border connection.</li>
+            <li><code>PRIVATE_OF</code> – Private AS belongs to a Public AS.</li>
+        </ul>
+
+        <p><strong>Example queries</strong></p>
+
+        <p>
+            Shows a single Public AS node with ASN 174.
+        </p>
+
+        <div class="query-example">
+            <button class="copy-query">
+                <i class="fa-solid fa-copy"></i>
+            </button>
+
+    <pre>MATCH (a:Public_AS {asn: 174})
 RETURN a</pre>
-    </div>
+        </div>
 
 
-    <p>
-        Shows the graph of a Public AS, all connected Private AS nodes, and any Router nodes that belong to the AS. However, this AS does not contain any routers.
-    </p>
+        <p>
+            Shows the graph of a Public AS, all connected Private AS nodes, and any Router nodes that belong to the AS. However, this AS does not contain any routers.
+        </p>
 
-    <div class="query-example">
-        <button class="copy-query">
-            <i class="fa-solid fa-copy"></i>
-        </button>
+        <div class="query-example">
+            <button class="copy-query">
+                <i class="fa-solid fa-copy"></i>
+            </button>
 
-<pre>MATCH (a:Public_AS {asn: 174})
+    <pre>MATCH (a:Public_AS {asn: 174})
 OPTIONAL MATCH m=(a)<-[:PRIVATE_OF]-(p:Private_AS)
 OPTIONAL MATCH n=(a)<-[:LOCATED_IN]-(r:Router)
 RETURN a, m, n</pre>
-    </div>
+        </div>
 
 
-    <p>
-        Retrieves a specific Private AS node by its ID.
-    </p>
+        <p>
+            Retrieves a specific Private AS node by its ID.
+        </p>
 
-    <div class="query-example">
-        <button class="copy-query">
-            <i class="fa-solid fa-copy"></i>
-        </button>
+        <div class="query-example">
+            <button class="copy-query">
+                <i class="fa-solid fa-copy"></i>
+            </button>
 
-<pre>MATCH (p:Private_AS {as_id: "65000_174"})
+    <pre>MATCH (p:Private_AS {as_id: "65000_174"})
 RETURN p</pre>
-    </div>
+        </div>
 
 
-    <p>
-        <small>
-            Private AS IDs are strings, so remember to include quotation marks.
-        </small>
-    </p>
+        <p>
+            <small>
+                Private AS IDs are strings, so remember to include quotation marks.
+            </small>
+        </p>
 
 
-    <p>
-        Shows a Private AS and all routers located inside it.
-    </p>
+        <p>
+            Shows a Private AS and all routers located inside it.
+        </p>
 
-    <div class="query-example">
-        <button class="copy-query">
-            <i class="fa-solid fa-copy"></i>
-        </button>
+        <div class="query-example">
+            <button class="copy-query">
+                <i class="fa-solid fa-copy"></i>
+            </button>
 
-<pre>MATCH m=(p:Private_AS {as_id: "65000_174"})<-[:LOCATED_IN]-(r:Router)
+    <pre>MATCH m=(p:Private_AS {as_id: "65000_174"})<-[:LOCATED_IN]-(r:Router)
 RETURN m</pre>
-    </div>
+        </div>
 
 
-    <p>
-        Retrieves a specific router node by its router ID.
-    </p>
+        <p>
+            Retrieves a specific router node by its router ID.
+        </p>
 
-    <div class="query-example">
-        <button class="copy-query">
-            <i class="fa-solid fa-copy"></i>
-        </button>
+        <div class="query-example">
+            <button class="copy-query">
+                <i class="fa-solid fa-copy"></i>
+            </button>
 
-<pre>MATCH (r:Router {router_id: "150.150.150.150_150"})
+    <pre>MATCH (r:Router {router_id: "150.150.150.150_150"})
 RETURN r</pre>
-    </div>
+        </div>
 
 
-    <p>
-        Shows a router, its owning node, and optionally any other public AS it connects to.
-    </p>
+        <p>
+            Shows a router, its owning node, and optionally any other public AS it connects to.
+        </p>
 
-    <div class="query-example">
-        <button class="copy-query">
-            <i class="fa-solid fa-copy"></i>
-        </button>
+        <div class="query-example">
+            <button class="copy-query">
+                <i class="fa-solid fa-copy"></i>
+            </button>
 
-<pre>MATCH m=(r:Router {router_id: "150.150.150.150_150"})-[:LOCATED_IN]->(owner)
+    <pre>MATCH m=(r:Router {router_id: "150.150.150.150_150"})-[:LOCATED_IN]->(owner)
 OPTIONAL MATCH n=(r)-[:LINK]->(border:Public_AS)
 RETURN m, n</pre>
-    </div>
+        </div>
 
-    <p>
-        Shows all routers that are bordering multiple Public ASes.
-    </p>
+        <p>
+            Shows all routers that are bordering multiple Public ASes.
+        </p>
 
-    <div class="query-example">
-        <button class="copy-query">
-            <i class="fa-solid fa-copy"></i>
-        </button>
+        <div class="query-example">
+            <button class="copy-query">
+                <i class="fa-solid fa-copy"></i>
+            </button>
 
-<pre>MATCH m=(border:Public_AS)<-[:LINK]-(r:Router)-[:LOCATED_IN]->(owner)
+    <pre>MATCH m=(border:Public_AS)<-[:LINK]-(r:Router)-[:LOCATED_IN]->(owner)
 RETURN r</pre>
+        </div>
     </div>
 </div>
 
@@ -202,7 +204,6 @@ RETURN r</pre>
     </div>
 
     <div id="cy"></div>
-
 </div>
 
 <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>

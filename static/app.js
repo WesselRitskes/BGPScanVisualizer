@@ -45,15 +45,6 @@ const loadingOverlay =
 const loadingMessage =
     document.getElementById("loading-message");
 
-function showLoading(message) {
-    loadingMessage.textContent = message;
-    loadingOverlay.classList.remove("hidden");
-}
-
-function hideLoading() {
-    loadingOverlay.classList.add("hidden");
-}
-
 let loadingInterval = null;
 
 function showLoading(message) {
@@ -73,7 +64,8 @@ function showLoading(message) {
 
     loadingMessage.textContent = message;
 
-    loadingOverlay.classList.remove("hidden");
+    if (loadingOverlay.classList.contains("hidden"))
+        loadingOverlay.classList.remove("hidden");
 }
 
 function hideLoading() {
@@ -177,7 +169,7 @@ function renderGraph(cy, data, layoutName = "concentric") {
     cy.fit();
 }
 
-showLoading("Loading overview graph");
+showLoading("Fetching graph from backend (Due to inactivity spin-down this may take up to one minute)");
 
 fetch(`${ip}/api/overview`, {
     credentials: "include"
@@ -192,6 +184,8 @@ fetch(`${ip}/api/overview`, {
             throw new Error(`HTTP ${response.status}`);
         }
 
+        hideLoading();
+        showLoading("Visualizing graph");
         return response.json();
     })
     .then(data => {
@@ -216,8 +210,7 @@ document
 
         const requestId = ++currentGraphRequest;
 
-        showLoading("Running Cypher query");
-
+        showLoading("Fetching graph from backend (Due to inactivity spin-down this may take up to one minute)");
         fetch(
             `${ip}/api/visualize`,
             {
@@ -241,6 +234,8 @@ document
             throw new Error(`HTTP ${response.status}`);
         }
 
+        hideLoading();
+        showLoading("Visualizing graph");
         return response.json();
     })
         .then(data => {
@@ -359,9 +354,10 @@ cy.on("tap", "node", async evt => {
     const requestId = currentGraphRequest;
     let loadingShown = false;
 
-    const timer = setTimeout(() => {
+
+    let timer = setTimeout(() => {
         loadingShown = true;
-        showLoading("Inspecting neighbouring entities");
+        showLoading("Fetching neighbours from backend (Due to inactivity spin-down this may take up to one minute)");
     }, 1000);
 
     try {
@@ -387,6 +383,14 @@ cy.on("tap", "node", async evt => {
         }
 
         const data = await response.json();
+
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            if (loadingShown)
+                hideLoading();
+            loadingShown = true;
+            showLoading("Visualizing neighbouring entities");
+        }, 1000);
 
         if (requestId === currentGraphRequest)
             addInspectionResult(cy, node, data);
