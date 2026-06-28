@@ -169,7 +169,7 @@ function renderGraph(cy, data, layoutName = "concentric") {
     cy.fit();
 }
 
-showLoading("Fetching graph from backend (Due to inactivity spin-down this may take up to one minute)");
+showLoading("Fetching graph (Due to inactivity spin-down this may take up to one minute)");
 
 fetch(`${ip}/api/overview`, {
     credentials: "include"
@@ -210,7 +210,7 @@ document
 
         const requestId = ++currentGraphRequest;
 
-        showLoading("Fetching graph from backend (Due to inactivity spin-down this may take up to one minute)");
+        showLoading("Fetching graph (Due to inactivity spin-down this may take up to one minute)");
         fetch(
             `${ip}/api/visualize`,
             {
@@ -357,7 +357,7 @@ cy.on("tap", "node", async evt => {
 
     let timer = setTimeout(() => {
         loadingShown = true;
-        showLoading("Fetching neighbours from backend (Due to inactivity spin-down this may take up to one minute)");
+        showLoading("Fetching neighbours (Due to inactivity spin-down this may take up to one minute)");
     }, 1000);
 
     try {

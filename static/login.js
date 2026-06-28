@@ -54,7 +54,7 @@ loginButton.addEventListener("click", async () => {
     const password =
         document.getElementById("password").value;
 
-    showLoading("Fetching graph from backend (Due to inactivity spin-down this may take up to one minute)");
+    showLoading("Fetching authentication (Due to inactivity spin-down this may take up to one minute)");
 
     const response = await fetch(`${ip}/auth/login`, {
         method: "POST",

@@ -152,7 +152,7 @@ html, body {
     max-width: 80vw;
     height: 100vh;
 
-    padding: 20px;
+    padding: 0;
 
     box-sizing: border-box;   /* important */
 
@@ -163,7 +163,7 @@ html, body {
     transform: translateX(100%);
     transition: transform 0.25s ease;
 
-    overflow-y: auto;
+    display: flex;
 
     z-index: 999;
 }
@@ -172,18 +172,16 @@ html, body {
     transform: translateX(0);
 }
 
+#help-sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
 #resize-handle {
-    position: absolute;
-
-    left: 0;
-    top: 0;
-
-    width: 8px;
-    height: 100%;
-
+    flex: 0 0 8px;
     cursor: ew-resize;
-
-    z-index: 1001;
+    background: transparent;
 }
 
 #help-button:hover,
